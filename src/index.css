@@ -1,0 +1,287 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+/* ─── Variables ─────────────────────────────────────────────── */
+:root {
+  --work-primary: #ff3b1e;
+  --work-glow: rgba(255, 59, 30, 0.35);
+  --rest-primary: #00e5a0;
+  --rest-glow: rgba(0, 229, 160, 0.3);
+  --bg-dark: #0a0a0f;
+  --bg-panel: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.07);
+  --text-muted: rgba(255,255,255,0.35);
+  --text-dim: rgba(255,255,255,0.6);
+  --white: #f0f0f0;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-ui: 'Rajdhani', sans-serif;
+  --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  background: var(--bg-dark);
+  color: var(--white);
+  font-family: var(--font-ui);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* ─── App Shell ─────────────────────────────────────────────── */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: background var(--transition);
+}
+
+.bg-work {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,59,30,0.12) 0%, transparent 70%),
+    var(--bg-dark);
+}
+.bg-rest {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,229,160,0.10) 0%, transparent 70%),
+    var(--bg-dark);
+}
+
+/* ─── Scanlines ─────────────────────────────────────────────── */
+.scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.18) 2px,
+    rgba(0,0,0,0.18) 4px
+  );
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
+.header {
+  position: relative; z-index: 1;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.2rem 1.6rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+}
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+  color: var(--white);
+}
+.logo-accent { color: var(--work-primary); margin-left: 2px; }
+.round-badge {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem;
+  border-radius: 3px;
+}
+.round-badge strong { color: var(--white); font-weight: 400; }
+
+/* ─── Main ──────────────────────────────────────────────────── */
+.main {
+  position: relative; z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2.4rem 1.2rem 3rem;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ─── Timer Display ─────────────────────────────────────────── */
+.timer-display-wrap {
+  position: relative;
+  width: 280px; height: 280px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ring {
+  position: absolute; inset: 0;
+  transform: rotate(-90deg);
+}
+.ring-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 6;
+}
+.ring-progress {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: butt;
+}
+.ring-work { stroke: var(--work-primary); filter: drop-shadow(0 0 6px var(--work-glow)); }
+.ring-rest { stroke: var(--rest-primary); filter: drop-shadow(0 0 6px var(--rest-glow)); }
+
+.timer-inner {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.3rem;
+  position: relative;
+}
+.phase-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  font-weight: 400;
+  transition: color var(--transition);
+}
+.phase-work { color: var(--work-primary); text-shadow: 0 0 12px var(--work-glow); }
+.phase-rest { color: var(--rest-primary); text-shadow: 0 0 12px var(--rest-glow); }
+
+.countdown {
+  font-family: var(--font-display);
+  font-size: 5.5rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+
+.pulse-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--work-primary);
+  animation: pulse 1s ease-in-out infinite;
+}
+.bg-rest .pulse-dot { background: var(--rest-primary); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.6); }
+}
+
+/* ─── Controls ──────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+.btn {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  border: 1px solid currentColor;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.65rem 1.4rem;
+  border-radius: 3px;
+  transition: all 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+.btn:hover::after { opacity: 0.12; }
+.btn:active { transform: scale(0.96); }
+
+.btn-start { color: var(--rest-primary); border-color: var(--rest-primary); }
+.btn-pause { color: #ffcc00; border-color: #ffcc00; }
+.btn-stop  { color: var(--work-primary); border-color: var(--work-primary); }
+.btn-reset { color: var(--text-dim); border-color: rgba(255,255,255,0.2); }
+.btn-reset:hover { color: var(--white); }
+
+/* ─── Settings ──────────────────────────────────────────────── */
+.settings {
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.settings-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.25em;
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.settings-row label {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.unit {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.input-wrap button {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.04);
+  border: none;
+  color: var(--white);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.input-wrap button:hover { background: rgba(255,255,255,0.1); }
+.input-wrap input {
+  width: 60px;
+  height: 36px;
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  outline: none;
+}
+.input-wrap input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 380px) {
+  .countdown { font-size: 4.2rem; }
+  .timer-display-wrap { width: 240px; height: 240px; }
+  .ring { }
+  .controls { gap: 0.5rem; }
+  .btn { padding: 0.55rem 1rem; font-size: 0.9rem; }
+}
